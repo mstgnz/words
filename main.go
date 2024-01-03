@@ -69,7 +69,7 @@ func classification(fileName, kind string) {
 		_ = outputFile.Close()
 	}
 
-	if err := scanner.Err(); err != nil {
+	if err = scanner.Err(); err != nil {
 		fmt.Println("Error reading line from file:", err)
 		return
 	}
