@@ -1,7 +1,3 @@
-/*
-   This is a multiline comment.
-   It can span multiple lines.
-*/
 package main
 
 import (
@@ -10,63 +6,64 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 func main() {
-	// Giriş dosyasını aç
-	inputFileName := "turkish.txt"
+	inputFileName := "./lang/english.txt"
 	inputFile, err := os.Open(inputFileName)
 	if err != nil {
-		fmt.Println("Giriş dosyasını açarken hata oluştu:", err)
+		fmt.Println("Error opening input file:", err)
 		return
 	}
-	defer inputFile.Close()
+	defer func(inputFile *os.File) {
+		_ = inputFile.Close()
+	}(inputFile)
 
-	// Dosyadan satır okuyarak kelimeleri filtrele ve ayrı dosyalara yaz
+	// Filter words by reading line by line from the file and write them to separate files
 	scanner := bufio.NewScanner(inputFile)
 	for scanner.Scan() {
 		word := scanner.Text()
 
-		// Kelimeyi büyük harfe çevir
+		// Capitalize the word
 		word = strings.ToUpper(word)
 
-		// Eğer kelime alfabetik karakterler içermiyorsa geç
+		// Skip if the word does not contain alphabetic characters
 		if !isValidWord(word) {
 			continue
 		}
 
-		wordLength := len(word)
+		wordLength := utf8.RuneCountInString(word)
 		outputFileName := fmt.Sprintf("%d_letter_words.txt", wordLength)
 
-		// Dosyayı aç (veya varsa oluştur)
+		// Open the file (or create it if available)
 		outputFile, err := os.OpenFile(outputFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			fmt.Printf("Dosyayı açarken hata oluştu (%s): %v\n", outputFileName, err)
+			fmt.Printf("Error opening the file (%s): %v\n", outputFileName, err)
 			return
 		}
 
-		// Kelimeyi dosyaya yaz
+		// Write the word in the file
 		_, err = fmt.Fprintf(outputFile, "%s\n", word)
 		if err != nil {
-			fmt.Printf("Dosyaya yazarken hata oluştu (%s): %v\n", outputFileName, err)
+			fmt.Printf("Error writing to file (%s): %v\n", outputFileName, err)
 			return
 		}
 
-		// Dosyayı hemen kapat
-		outputFile.Close()
+		// Close the file now
+		_ = outputFile.Close()
 	}
 
 	if err := scanner.Err(); err != nil {
-		fmt.Println("Dosyadan satır okurken hata oluştu:", err)
+		fmt.Println("Error reading line from file:", err)
 		return
 	}
 
-	fmt.Println("İşlem tamamlandı.")
+	fmt.Println("Process completed.")
 }
 
 func isValidWord(word string) bool {
-	// Kelime içinde sadece harf içerip içermediğini kontrol et
-	validPattern := regexp.MustCompile(`^[A-Z]+$`)
+	// Check if there are only letters in the word
+	validPattern := regexp.MustCompile(`^[A-ZÇĞİŞÖÜ]+$`)
 	return validPattern.MatchString(word)
 }
-
