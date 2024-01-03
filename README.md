@@ -6,7 +6,7 @@ All words are capitalized and recorded.
 
 
 ### English Classification
-* [1 Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/length/1_letter_words.txt) - [A Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/alphabet/A_letter_words.txt)
+* [1 Letter Words](./lang/en/length/1_letter_words.txt) - [A Letter Words](./lang/en/alphabet/A_letter_words.txt)
 * [2 Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/length/2_letter_words.txt) - [B Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/alphabet/B_letter_words.txt)
 * [3 Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/length/3_letter_words.txt) - [C Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/alphabet/C_letter_words.txt)
 * [4 Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/length/4_letter_words.txt) - [D Letter Words](https://github.com/mstgnz/words/blob/main/lang/en/alphabet/D_letter_words.txt)
