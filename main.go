@@ -10,8 +10,16 @@ import (
 )
 
 func main() {
-	inputFileName := "./lang/english.txt"
-	inputFile, err := os.Open(inputFileName)
+
+	classification("./lang/english.txt")
+
+	//checkWords("./lang/english.txt", "./lang/new_english.txt")
+	//checkWords("./lang/turkish.txt", "./lang/new_turkish.txt")
+}
+
+func classification(fileName string) {
+
+	inputFile, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println("Error opening input file:", err)
 		return
@@ -60,6 +68,50 @@ func main() {
 	}
 
 	fmt.Println("Process completed.")
+}
+
+func checkWords(inputFileName, outputFileName string) {
+
+	inputFile, err := os.Open(inputFileName)
+	if err != nil {
+		fmt.Println("Error opening input file:", err)
+		return
+	}
+	defer func(inputFile *os.File) {
+		_ = inputFile.Close()
+	}(inputFile)
+
+	outputFile, err := os.Create(outputFileName)
+	if err != nil {
+		fmt.Println("Error creating output file:", err)
+		return
+	}
+	defer func(outputFile *os.File) {
+		_ = outputFile.Close()
+	}(outputFile)
+
+	scanner := bufio.NewScanner(inputFile)
+	for scanner.Scan() {
+		word := scanner.Text()
+
+		// Capitalize the word
+		word = strings.ToUpper(word)
+
+		// Skip if the word does not contain alphabetic characters
+		if isValidWord(word) {
+			// Write the word in the new file
+			_, err := fmt.Fprintf(outputFile, "%s\n", word)
+			if err != nil {
+				fmt.Printf("Error writing to file (%s): %v\n", outputFileName, err)
+				return
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error reading line from file:", err)
+		return
+	}
 }
 
 func isValidWord(word string) bool {
