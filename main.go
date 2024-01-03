@@ -11,13 +11,13 @@ import (
 
 func main() {
 
-	classification("./lang/english.txt")
+	classification("./lang/english.txt", "alphabet")
 
 	//checkWords("./lang/english.txt", "./lang/new_english.txt")
 	//checkWords("./lang/turkish.txt", "./lang/new_turkish.txt")
 }
 
-func classification(fileName string) {
+func classification(fileName, kind string) {
 
 	inputFile, err := os.Open(fileName)
 	if err != nil {
@@ -41,8 +41,15 @@ func classification(fileName string) {
 			continue
 		}
 
-		wordLength := utf8.RuneCountInString(word)
-		outputFileName := fmt.Sprintf("%d_letter_words.txt", wordLength)
+		var outputFileName string
+		if kind == "alphabet" {
+			// Get the first letter of the word
+			firstLetter, _ := utf8.DecodeRuneInString(word)
+			outputFileName = fmt.Sprintf("lang/%c_letter_words.txt", firstLetter)
+		} else {
+			wordLength := utf8.RuneCountInString(word)
+			outputFileName = fmt.Sprintf("lang/%d_letter_words.txt", wordLength)
+		}
 
 		// Open the file (or create it if available)
 		outputFile, err := os.OpenFile(outputFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
